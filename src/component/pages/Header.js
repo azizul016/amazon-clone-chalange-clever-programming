@@ -35,18 +35,22 @@ const Header = () => {
       </div>
 
       <div className="header__nav">
-        <Link to={!state.user && '/login'}>
+        <Link to={!state.user && "/login"}>
           <div onClick={handleAuthentication} className="header_option">
-            <span className="header__optionLineOne">Hello {!state.user ? "Guest" : state.user.email}</span>
+            <span className="header__optionLineOne">
+              Hello {!state.user ? "Guest" : state.user.email}
+            </span>
             <span className="header__optionLineTwo">
               {state.user ? "Sign Out" : "Sign In"}
             </span>
           </div>
         </Link>
-        <div className="header_option">
-          <span className="header__optionLineOne">Returns</span>
-          <span className="header__optionLineTwo">& Orders</span>
-        </div>
+        <Link to="/orders">
+          <div className="header_option">
+            <span className="header__optionLineOne">Returns</span>
+            <span className="header__optionLineTwo">& Orders</span>
+          </div>
+        </Link>
         <div className="header_option">
           <span className="header__optionLineOne">Your</span>
           <span className="header__optionLineTwo">Prime</span>

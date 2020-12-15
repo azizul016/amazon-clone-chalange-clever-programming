@@ -19,14 +19,30 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// try {
+//   app.post("/payments/create", async (req, res) => {
+//     const total = req.query.total;
+//     console.log("This is bank-end", total);
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: total,
+//       currency: "usd",
+//     });
+
+//     res.status(201).send({ clientSecret: paymentIntent.client_secret });
+//   });
+// } catch (err) {
+//   return res.status(500).send(err);
+// }
+
 app.post("/payments/create", async (req, res) => {
   const total = req.query.total;
-  console.log("This is bank-end", total);
-  const paymentIntent = await stripe.paymentInterns.create({
+  // console.log("This is bank-end", total);
+  const paymentIntent = await stripe.paymentIntents.create({
     amount: total,
     currency: "usd",
   });
 
+  // console.log(paymentIntent);
   res.status(201).send({ clientSecret: paymentIntent.client_secret });
 });
 

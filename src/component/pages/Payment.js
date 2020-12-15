@@ -12,6 +12,7 @@ import {
 import { getBasketTotal } from "./reducer";
 import CurrencyFormat from "react-currency-format";
 import axios from "./axios";
+import { db } from "../../firebase.config/firebase.config";
 
 function Payment() {
   const [{ basket, user }, dispatch] = useStateValue();
@@ -35,8 +36,8 @@ function Payment() {
     getClientSecret();
   }, [basket]);
 
-  console.log("The sectet is ", clientSecret);
-
+  // console.log("The sectet is ", clientSecret);
+  // console.log(user);
   //handle submit;
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,11 +50,30 @@ function Payment() {
         },
       })
       .then(({ paymentIntent }) => {
+        // console.log(data);
+        db.collection("users")
+          .doc(user?.uid)
+          .collection("orders")
+          .doc(paymentIntent.id)
+          .set({
+            basket: basket,
+            amount: paymentIntent.amount,
+            created: paymentIntent.created,
+          });
+
+        // db.collection("newUser").doc(user?.uid).set({
+        //   basket: basket,
+        //   amount: paymentIntent.amount,
+        //   created: paymentIntent.created,
+        // });
+
         setSucceeded(true);
         setError(null);
         setProcessing(false);
-
-        history.replace("/order");
+        dispatch({
+          type: "EMPTY_BASKET",
+        });
+        history.replace("/orders");
       });
   };
 
@@ -121,8 +141,8 @@ function Payment() {
                   thousandSeparator={true}
                   prefix={"$"}
                 />
-                <button disabled={processing || disabled || succeeded}>
-                  <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                <button className="buyNow" disabled={processing || disabled || succeeded}>
+                  <span >{processing ? <p>Processing</p> : "Buy Now"}</span>
                 </button>
               </div>
               {error && <div>{error}</div>}
